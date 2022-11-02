@@ -10,6 +10,7 @@ class Problem(Base):
     status = Column("status",String(40))
     tutee_id = Column("tutee_id",Integer)
     tag_id = Column("tag_id",Integer)
+    tutor_id_tutor = Column("tutor_id_tutor",Integer)
 
 
     def __init__ (self,title,description,course_tag,status,tag_id,tutee_id):

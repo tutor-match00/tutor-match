@@ -11,6 +11,7 @@ def signup():
     content_type = request.headers.get("Content-Type")
     # making sure that the content type is json
     print(content_type)
+    print(request.json)
     return {
         "g":"gg"
     }
