@@ -10,7 +10,7 @@ class Problem(Base):
     status = Column("status",String(40))
 
 
-def __init__ (self,title,description,course_tag,status):
+    def __init__ (self,title,description,course_tag,status):
         self.title = title
         self.description = description
         self.course_tag = course_tag

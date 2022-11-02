@@ -11,7 +11,7 @@ class Tutor(Base):
     user_password = Column('user_password',String(250))
 
 
-def __init__ (self,first_name,last_name,user_email,user_password,whatsapp_number):
+    def __init__ (self,first_name,last_name,user_email,user_password,whatsapp_number):
         self.first_name = first_name
         self.last_name = last_name
         self.user_email = user_email
