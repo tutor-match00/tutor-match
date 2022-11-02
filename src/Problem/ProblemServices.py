@@ -98,46 +98,38 @@ def enterProblem():
     content_type = request.headers.get("Content-Type")
     # making sure that the content type is json
     if content_type == "application/json":
+        from app import session
         try:
             request_data = request.json
         except Exception as e:
             return ({
                 "status": False,
-                "message": f"Error: {e}",
+                "msg": f"Error: {e}",
             }, 400)
 
         try:
             course = request_data["course"]
             topic = request_data["topic"]
             problem_description = request_data["problem_description"]
-            try:
-                session.add(newHospital)
-                session.commit()
-            except Exception as e:
-                session.rollback()
-                return ({
-                    'msg': {
-                        "message": "Connection Error: Unable to register hospital",
-                        "dev_message": (f"{e}"),
-
-                    },
-                    "status": False
-                }), 400
         except Exception as e:
             return ({
                 "status": False,
-                "message": f"Error: {e}",
+                "msg": f"Error: {e}",
             }, 400)
 
-        problem_info = {
-            "course": course,
-            "topic": topic,
-            "problem_description": problem_description
-        }
-
-        print(problem_info)
+        try:
+            new_problem = Problem(course_tag=course, title=topic,
+                                  description=problem_description,)
+            session.add(new_problem)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return ({
+                "status": False,
+                "msg": f"Error: {e}",
+            }, 400)
 
         return ({
             "status": True,
-            "message": "Problem successfully entered",
+            "msg": "Problem successfully entered",
         }, 200)
