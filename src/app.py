@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from Problem.ProblemServices import problem_routes
 from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 
 engine = create_engine("mysql+pymysql://sql8535825:73FBRDrv7e@sql8.freesqldatabase.com:3306/sql8535825",pool_pre_ping = True,pool_size=20, max_overflow=10)#establish a connection with the database
 Session = sessionmaker(bind=engine)
@@ -29,7 +30,7 @@ except Exception as e:
 finally:
     session.close()
 
-@app.route('/')
+@app.route('/', methods=["GET"])
 def hello():
     return 'Hello, World!'
 
@@ -37,5 +38,4 @@ def hello():
 app.register_blueprint(problem_routes)
 
 if __name__ == '__main__':
-    CORS(app)
     app.run(debug=True)
