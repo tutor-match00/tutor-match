@@ -1,7 +1,5 @@
 from flask import Blueprint
 from flask_cors import CORS
-# from Problem.Problem import Problem
-
 problem_routes = Blueprint('problem_routes', __name__)
 CORS(problem_routes)
 
