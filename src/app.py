@@ -3,6 +3,7 @@ from flask import Flask
 from sqlalchemy import create_engine,MetaData
 from sqlalchemy.orm import sessionmaker
 from Problem.ProblemServices import problem_routes
+from Tutee.TuteeService import tutee_routes
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -36,6 +37,8 @@ def hello():
 
 
 app.register_blueprint(problem_routes)
+app.register_blueprint(tutee_routes)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

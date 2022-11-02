@@ -1,5 +1,5 @@
 from flask import Blueprint,request
-import Problem
+from Problem.ProblemModel import Problem
 from flask_cors import CORS
 problem_routes = Blueprint('problem_routes', __name__)
 CORS(problem_routes)
@@ -10,6 +10,7 @@ def get_all_problems():
     from app import session
     try:
         problems = session.query(Problem).all()
+        print(problems)
     except:
         pass
         
@@ -33,6 +34,19 @@ def enterProblem():
             course = request_data["course"]
             topic = request_data["topic"]
             problem_description = request_data["problem_description"]
+            try: 
+                session.add(newHospital)
+                session.commit()
+            except Exception as e:
+                session.rollback()  
+                return  ( {
+                'msg': {
+                    "message": "Connection Error: Unable to register hospital",
+                    "dev_message": (f"{e}"),
+                    
+                },
+                "status": False
+            }),400
         except Exception as e:
             return ({
                 "status": False,
