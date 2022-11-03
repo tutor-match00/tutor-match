@@ -17,7 +17,7 @@ def getProblems():
             tutor_id = int(request.args.get("tutor_id"))
             tutor = session.query(Tutor).filter_by(id=tutor_id).first()
             problems = session.query(Problem).filter(
-                (Problem.course_tag == tutor.course_tag)).all()
+                (Problem.course_tag == tutor.course_tag), (Problem.status == False)).all()
             print(tutor.course_tag)
             return {
                 "status": True,

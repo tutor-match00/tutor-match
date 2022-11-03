@@ -2,8 +2,9 @@ from flask import request, jsonify, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash
 from Tutee.TuteeModel import Tutee
 from flask_cors import CORS
-tutee_routes= Blueprint("tutee_routes", __name__)
+tutee_routes = Blueprint("tutee_routes", __name__)
 CORS(tutee_routes)
+
 
 @tutee_routes.route('/tutee/signup/', methods=['POST'])
 def signup():
@@ -20,7 +21,7 @@ def signup():
             }, 400)
 
         try:
-            
+
             first_name = request_data["first_name"]
             last_name = request_data["last_name"]
             password = request_data["password"]
@@ -34,11 +35,26 @@ def signup():
 
         try:
             passwordHash = generate_password_hash(password)
-            newTutee  = Tutee(first_name=first_name,last_name=last_name,user_email=email,user_password=passwordHash,whatsapp_number=whatsapp_number)
+            newTutee = Tutee(first_name=first_name, last_name=last_name, user_email=email,
+                             user_password=passwordHash, whatsapp_number=whatsapp_number)
             session.add(newTutee)
             session.commit()
-            tutee_id = session.query(Tutee.id).filter(Tutee.user_email == email, Tutee.user_password == check_password_hash(passwordHash,password)).first()
-            tuteeIn = session.query(Tutee).get(tutee_id)
+
+            if (check_password_hash(passwordHash, password)):
+                the_tutee = session.query(Tutee).filter(
+                    Tutee.user_email == email).first()
+
+                return ({
+                    "status": True,
+                    "msg": {
+                        "id": the_tutee.id,
+                    },
+                }, 200)
+            else:
+                return ({
+                    "status": False,
+                    "msg": "Error: Passwords do not match",
+                }, 400)
 
         except Exception as e:
             session.rollback()
@@ -46,14 +62,6 @@ def signup():
                 "status": False,
                 "msg": f"Error: {e}",
             }, 400)
-
-        return ({
-            "status": True,
-            "msg": {
-                "id": tuteeIn.id,
-            },
-        }, 200)
-
 
 
 @tutee_routes.route('/tutee/login/', methods=['POST'])
@@ -81,7 +89,8 @@ def login():
 
         try:
             passwordHash = generate_password_hash(password)
-            tutee_id = session.query(Tutee.id).filter(Tutee.user_email == email, Tutee.user_password == check_password_hash(passwordHash,password)).first()
+            tutee_id = session.query(Tutee.id).filter(
+                Tutee.user_email == email, Tutee.user_password == check_password_hash(passwordHash, password)).first()
             tuteeIn = session.query(Tutee).get(tutee_id)
         except Exception as e:
             session.rollback()
