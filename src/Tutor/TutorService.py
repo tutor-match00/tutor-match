@@ -1,11 +1,11 @@
 from flask import request, jsonify, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash
-from Tutee.TuteeModel import Tutee
+from Tutor.TutorModel import Tutor
 from flask_cors import CORS
-tutee_routes= Blueprint("tutee_routes", __name__)
-CORS(tutee_routes)
+tutor_routes= Blueprint("tutor_routes", __name__)
+CORS(tutor_routes)
 
-@tutee_routes.route('/tutee/signup/', methods=['POST'])
+@tutor_routes.route('/tutor/signup/', methods=['POST'])
 def signup():
     content_type = request.headers.get("Content-Type")
     # making sure that the content type is json
@@ -25,6 +25,7 @@ def signup():
             last_name = request_data["last_name"]
             password = request_data["password"]
             email = request_data["email"]
+            course_tag = request_data["course_tag"]
             whatsapp_number = request_data["whatsapp_number"]
         except Exception as e:
             return ({
@@ -34,12 +35,11 @@ def signup():
 
         try:
             passwordHash = generate_password_hash(password)
-            newTutee  = Tutee(first_name=first_name,last_name=last_name,user_email=email,user_password=passwordHash,whatsapp_number=whatsapp_number)
-            session.add(newTutee)
+            newTutor  = Tutor(first_name=first_name,last_name=last_name,user_email=email,user_password=passwordHash,course_tag=course_tag,whatsapp_number=whatsapp_number)
+            session.add(newTutor)
             session.commit()
-            tutee_id = session.query(Tutee.id).filter(Tutee.user_email == email, Tutee.user_password == check_password_hash(passwordHash)).first()
-            tuteeIn = session.query(Tutee).get(tutee_id)
-
+            tutor_id = session.query(Tutor.id).filter(Tutor.user_email == email, Tutor.user_password == check_password_hash(passwordHash)).first()
+            tutorIn = session.query(Tutor).get(tutor_id)
         except Exception as e:
             session.rollback()
             return ({
@@ -50,13 +50,13 @@ def signup():
         return ({
             "status": True,
             "msg": {
-                "id": tuteeIn.id,
+                "id": tutorIn.id,
             },
         }, 200)
 
 
 
-@tutee_routes.route('/tutee/login/', methods=['POST'])
+@tutor_routes.route('/tutor/login/', methods=['POST'])
 def login():
     content_type = request.headers.get("Content-Type")
     # making sure that the content type is json
@@ -81,8 +81,8 @@ def login():
 
         try:
             passwordHash = generate_password_hash(password)
-            tutee_id = session.query(Tutee.id).filter(Tutee.user_email == email, Tutee.user_password == check_password_hash(passwordHash)).first()
-            tuteeIn = session.query(Tutee).get(tutee_id)
+            tutor_id = session.query(Tutor.id).filter(Tutor.user_email == email, Tutor.user_password == check_password_hash(passwordHash)).first()
+            tutorIn = session.query(Tutor).get(tutor_id)
         except Exception as e:
             session.rollback()
             return ({
@@ -93,6 +93,6 @@ def login():
         return ({
             "status": True,
             "msg": {
-                "id": tuteeIn.id,
+                "id": tutorIn.id,
             },
         }, 200)

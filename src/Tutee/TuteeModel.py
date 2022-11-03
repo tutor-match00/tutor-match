@@ -19,3 +19,4 @@ class Tutee(Base):
         self.last_name = last_name
         self.user_email = user_email
         self.user_password = user_password
+        self.whatsapp_number = whatsapp_number
