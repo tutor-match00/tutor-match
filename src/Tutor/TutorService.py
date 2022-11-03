@@ -38,7 +38,8 @@ def signup():
             newTutor  = Tutor(first_name=first_name,last_name=last_name,user_email=email,user_password=passwordHash,course_tag=course_tag,whatsapp_number=whatsapp_number)
             session.add(newTutor)
             session.commit()
-            tutor_id = session.query(Tutor.id).filter(Tutor.user_email == email, Tutor.user_password == check_password_hash(passwordHash)).first()
+            print(check_password_hash(passwordHash,))
+            tutor_id = session.query(Tutor.id).filter(Tutor.user_email == email, Tutor.user_password == check_password_hash(passwordHash,password)).first()
             tutorIn = session.query(Tutor).get(tutor_id)
         except Exception as e:
             session.rollback()
@@ -81,7 +82,7 @@ def login():
 
         try:
             passwordHash = generate_password_hash(password)
-            tutor_id = session.query(Tutor.id).filter(Tutor.user_email == email, Tutor.user_password == check_password_hash(passwordHash)).first()
+            tutor_id = session.query(Tutor.id).filter(Tutor.user_email == email, Tutor.user_password == check_password_hash(passwordHash,password)).first()
             tutorIn = session.query(Tutor).get(tutor_id)
         except Exception as e:
             session.rollback()

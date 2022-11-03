@@ -37,7 +37,7 @@ def signup():
             newTutee  = Tutee(first_name=first_name,last_name=last_name,user_email=email,user_password=passwordHash,whatsapp_number=whatsapp_number)
             session.add(newTutee)
             session.commit()
-            tutee_id = session.query(Tutee.id).filter(Tutee.user_email == email, Tutee.user_password == check_password_hash(passwordHash)).first()
+            tutee_id = session.query(Tutee.id).filter(Tutee.user_email == email, Tutee.user_password == check_password_hash(passwordHash,password)).first()
             tuteeIn = session.query(Tutee).get(tutee_id)
 
         except Exception as e:
@@ -81,7 +81,7 @@ def login():
 
         try:
             passwordHash = generate_password_hash(password)
-            tutee_id = session.query(Tutee.id).filter(Tutee.user_email == email, Tutee.user_password == check_password_hash(passwordHash)).first()
+            tutee_id = session.query(Tutee.id).filter(Tutee.user_email == email, Tutee.user_password == check_password_hash(passwordHash,password)).first()
             tuteeIn = session.query(Tutee).get(tutee_id)
         except Exception as e:
             session.rollback()
